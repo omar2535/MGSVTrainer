@@ -4,6 +4,7 @@
 #include <string>
 #include "proc.h"
 #include "Data.cpp"
+#include <ctime>
 
 /*
 	COMMENTS:
@@ -26,13 +27,26 @@ int main() {
 
 	hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, procID);
 	uintptr_t dynamicPointerBaseAddress = gameBaseAddress + gameInitialOffset;
-	cout << "Base address of game: 0x" << hex << gameBaseAddress << endl;
-	cout << "Dynamically Generated Base Address for offsets: 0x" << hex << dynamicPointerBaseAddress << endl;
 	uintptr_t healthAddress = FindDMAAddy(hProcess, dynamicPointerBaseAddress, healthOffsets);
 	
 	float desiredHealthValue = 5400.00f;
+	bool cheatStatus = false;
+	int lastPressed = clock();
 	while (true) {
-		WriteProcessMemory(hProcess, (BYTE*)healthAddress, &desiredHealthValue, sizeof(desiredHealthValue), nullptr);
+		system("CLS");
+		cout << "Base address of game: 0x" << hex << gameBaseAddress << endl;
+		cout << "Dynamically Generated Base Address for offsets: 0x" << hex << dynamicPointerBaseAddress << endl;
+		cout << "Cheat status: " << cheatStatus << endl;
+
+		if (cheatStatus) {
+			WriteProcessMemory(hProcess, (BYTE*)healthAddress, &desiredHealthValue, sizeof(desiredHealthValue), nullptr);
+		}
+		
+		if (GetAsyncKeyState(VK_F1) && clock() - lastPressed > 400) {
+			lastPressed = clock();
+			cheatStatus = !cheatStatus;
+		}
+				
 		Sleep(100);
 	}
 
