@@ -31,7 +31,7 @@ uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 {
 	uintptr_t modBaseAddr = 0;
 	// If this is returning ERROR_PARTIAL_COPPY, it is because the program is in 32 bit trying to access a 64 bit process.
-	// https://stackoverflow.com/questions/26474349/createtoolhelp32snapshot-invalid-handle-value-error-partial-copy
+	// look up "createtoolhelp32snapshot-invalid-handle-value-error-partial-copy"
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId); 
 	if (hSnap != INVALID_HANDLE_VALUE)
 	{
